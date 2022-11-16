@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: koreserve-graph-server
+  namespace: koreserve
+spec:
+  selector:
+    matchLabels:
+      app: koreserve-graph-server
+  template:
+    metadata:
+      labels:
+        app: koreserve-graph-server
+    spec:
+      containers:
+        - name: koreserve-graph-server
+          image: 192.168.88.155/koreserve/graph-server:v1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5006
+          env:
+            - name: DRIFT_MONITOR_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: koreserve-config
+                  key: DRIFT_MONITOR_ENDPOINT
+            - name: ACCURACY_MONITOR_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: koreserve-config
+                  key: ACCURACY_MONITOR_ENDPOINT
+            - name: SERVICE_MONITOR_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: koreserve-config
+                  key: SERVICE_MONITOR_ENDPOINT
+      serviceAccountName: kserve-api-sa
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: koreserve-graph-server
+  namespace: koreserve
+spec:
+  selector:
+    app: koreserve-graph-server
+  ports:
+    - name: http
+      nodePort: 30074
+      port: 5006
+      protocol: TCP
+      targetPort: 5006
+  type: NodePort

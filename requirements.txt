@@ -1,0 +1,6 @@
+bokeh==3.0.1
+tornado==6.1
+pandas==1.4.3
+requests ==2.26.0
+numpy==1.23.1
+werkzeug==2.1.2
