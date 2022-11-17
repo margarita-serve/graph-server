@@ -436,8 +436,8 @@ def predicted_actual(doc):
                     ("date", "@x{%Y-%m-%d:%H} ~ @delta_x{%Y-%m-%d:%H}"),
                     (f"Percentage Predicted({positive_class})", "@circle1{0.00 %}"),
                     (f"Percnetage Actual({positive_class})", "@circle2{0.00 %}"),
-                    ("Number of rows", "@r_vbar1{0 a}"),
-                    ("Number of rows without actuals", "@r_vbar2{0 a}"),
+                    ("Number of rows", "@r_vbar1{0.000 a}"),
+                    ("Number of rows without actuals", "@r_vbar2{0.000 a}"),
                 ]
             else:
                 tooltips = [
