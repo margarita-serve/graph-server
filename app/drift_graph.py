@@ -405,6 +405,8 @@ def prediction_over_time(doc):
         tick_min = np.nanmin(tenth)
         if tick_max == tick_min:
             tick_min = 0
+            if tick_max == 0:
+                tick_max = 1
         term = tick_max - tick_min
         gap = term / 5
         if tick_min == 0:
