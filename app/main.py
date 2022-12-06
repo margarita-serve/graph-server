@@ -24,7 +24,6 @@ env = Environment(loader=FileSystemLoader('app/templates'))
 # local test
 # env = Environment(loader=FileSystemLoader('templates'))
 
-
 ############################################################
 # Domain Logic
 ############################################################
@@ -34,6 +33,12 @@ class DriftHandler(RequestHandler):
     def get(self, deploymentID):
         args = self.request.arguments
         host_endpoint = self.request.host
+        xProto = self.request.headers.get_list("X-Forwarded-Proto")
+        if len(xProto) == 0:
+            xProto = "http"
+        else:
+            xProto = xProto[0]
+
         model_history_id = args.get('modelHistoryID')[0].decode('utf8')
         start_time = args.get('startTime')[0].decode('utf8')
         end_time = args.get('endTime')[0].decode('utf8')
@@ -45,7 +50,7 @@ class DriftHandler(RequestHandler):
         }
 
         template = env.get_template('embed.html')
-        script = server_document(f"http://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/featuredrift",
+        script = server_document(f"{xProto}://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/featuredrift",
                                  arguments=arg)
         temp = template.render(script=script, template="Tornado")
         self.write(temp)
@@ -55,6 +60,12 @@ class DetailHandler(RequestHandler):
     def get(self, deploymentID):
         args = self.request.arguments
         host_endpoint = self.request.host
+        xProto = self.request.headers.get_list("X-Forwarded-Proto")
+        if len(xProto) == 0:
+            xProto = "http"
+        else:
+            xProto = xProto[0]
+
         model_history_id = args.get('modelHistoryID')[0].decode('utf8')
         start_time = args.get('startTime')[0].decode('utf8')
         end_time = args.get('endTime')[0].decode('utf8')
@@ -67,7 +78,7 @@ class DetailHandler(RequestHandler):
 
         template = env.get_template('embed.html')
         script = server_document(
-            f"http://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/featuredetail", arguments=arg)
+            f"{xProto}://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/featuredetail", arguments=arg)
         temp = template.render(script=script, template="Tornado")
         self.write(temp)
 
@@ -76,6 +87,12 @@ class POTHandler(RequestHandler):
     def get(self, deploymentID):
         args = self.request.arguments
         host_endpoint = self.request.host
+        xProto = self.request.headers.get_list("X-Forwarded-Proto")
+        if len(xProto) == 0:
+            xProto = "http"
+        else:
+            xProto = xProto[0]
+
         model_history_id = args.get('modelHistoryID')[0].decode('utf8')
         start_time = args.get('startTime')[0].decode('utf8')
         end_time = args.get('endTime')[0].decode('utf8')
@@ -88,7 +105,7 @@ class POTHandler(RequestHandler):
 
         template = env.get_template('embed.html')
         script = server_document(
-            f"http://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/pot", arguments=arg)
+            f"{xProto}://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/pot", arguments=arg)
         temp = template.render(script=script, template="Tornado")
         self.write(temp)
 
@@ -97,6 +114,12 @@ class AccuracyHandler(RequestHandler):
     def get(self, deploymentID):
         args = self.request.arguments
         host_endpoint = self.request.host
+        xProto = self.request.headers.get_list("X-Forwarded-Proto")
+        if len(xProto) == 0:
+            xProto = "http"
+        else:
+            xProto = xProto[0]
+
         model_history_id = args.get('modelHistoryID')[0].decode('utf8')
         start_time = args.get('startTime')[0].decode('utf8')
         end_time = args.get('endTime')[0].decode('utf8')
@@ -115,7 +138,7 @@ class AccuracyHandler(RequestHandler):
 
         template = env.get_template('embed.html')
         script = server_document(
-            f"http://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/aot", arguments=arg)
+            f"{xProto}://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/aot", arguments=arg)
         temp = template.render(script=script, template="Tornado")
         self.write(temp)
 
@@ -124,6 +147,12 @@ class PAHandler(RequestHandler):
     def get(self, deploymentID):
         args = self.request.arguments
         host_endpoint = self.request.host
+        xProto = self.request.headers.get_list("X-Forwarded-Proto")
+        if len(xProto) == 0:
+            xProto = "http"
+        else:
+            xProto = xProto[0]
+
         model_history_id = args.get('modelHistoryID')[0].decode('utf8')
         start_time = args.get('startTime')[0].decode('utf8')
         end_time = args.get('endTime')[0].decode('utf8')
@@ -136,7 +165,7 @@ class PAHandler(RequestHandler):
 
         template = env.get_template('embed.html')
         script = server_document(
-            f"http://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/pa", arguments=arg)
+            f"{xProto}://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/pa", arguments=arg)
         temp = template.render(script=script, template="Tornado")
         self.write(temp)
 
@@ -145,6 +174,16 @@ class ServiceHandler(RequestHandler):
     def get(self, deploymentID):
         args = self.request.arguments
         host_endpoint = self.request.host
+        logger.info('--------------------------------------')
+        logger.info(self.request.headers)
+        logger.info('--------------------------------------')
+
+        xProto = self.request.headers.get_list("X-Forwarded-Proto")
+        if len(xProto) == 0:
+            xProto = "http"
+        else:
+            xProto = xProto[0]
+
         model_history_id = args.get('modelHistoryID')[0].decode('utf8')
         start_time = args.get('startTime')[0].decode('utf8')
         end_time = args.get('endTime')[0].decode('utf8')
@@ -164,7 +203,7 @@ class ServiceHandler(RequestHandler):
 
         template = env.get_template('embed.html')
         script = server_document(
-            f"http://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/servicehealth", arguments=arg)
+            f"{xProto}://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/servicehealth", arguments=arg)
         temp = template.render(script=script, template="Tornado")
         self.write(temp)
 
@@ -173,6 +212,12 @@ class CpuHandler(RequestHandler):
     def get(self, deploymentID):
         args = self.request.arguments
         host_endpoint = self.request.host
+        xProto = self.request.headers.get_list("X-Forwarded-Proto")
+        if len(xProto) == 0:
+            xProto = "http"
+        else:
+            xProto = xProto[0]
+
         request_cpu = args.get('requestCPU')[0].decode('utf8')
 
         arg = {
@@ -183,7 +228,7 @@ class CpuHandler(RequestHandler):
 
         template = env.get_template('embed.html')
         script = server_document(
-            f"http://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/cpu-graph", arguments=arg)
+            f"{xProto}://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/cpu-graph", arguments=arg)
         temp = template.render(script=script, template="Tornado")
         self.write(temp)
 
@@ -192,6 +237,12 @@ class MemoryHandler(RequestHandler):
     def get(self, deploymentID):
         args = self.request.arguments
         host_endpoint = self.request.host
+        xProto = self.request.headers.get_list("X-Forwarded-Proto")
+        if len(xProto) == 0:
+            xProto = "http"
+        else:
+            xProto = xProto[0]
+
         request_memory = args.get('requestMemory')[0].decode('utf8')
 
         arg = {
@@ -202,7 +253,7 @@ class MemoryHandler(RequestHandler):
 
         template = env.get_template('embed.html')
         script = server_document(
-            f"http://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/memory-graph", arguments=arg)
+            f"{xProto}://{host_endpoint}/api/v1/deployments/graph-svr/{deploymentID}/memory-graph", arguments=arg)
         temp = template.render(script=script, template="Tornado")
         self.write(temp)
 
@@ -240,6 +291,7 @@ server = Server({
     ],
     allow_websocket_origin=["*"],
     prefix="/api/v1/deployments/graph-svr",
+    # http_server_kwargs=dict({"xheaders": True})
 )
 # server.start()
 
