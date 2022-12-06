@@ -174,10 +174,6 @@ class ServiceHandler(RequestHandler):
     def get(self, deploymentID):
         args = self.request.arguments
         host_endpoint = self.request.host
-        logger.info('--------------------------------------')
-        logger.info(self.request.headers)
-        logger.info('--------------------------------------')
-
         xProto = self.request.headers.get_list("X-Forwarded-Proto")
         if len(xProto) == 0:
             xProto = "http"
