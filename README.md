@@ -12,6 +12,7 @@ export SERVICE_MONITOR_ENDPOINT="http://192.168.88.151:30073"
 
 ## 로컬환경 실행
 ```shell
+export MODE="dev"
 $ python main.py
 ```
 

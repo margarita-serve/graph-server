@@ -18,11 +18,12 @@ logging.basicConfig(level=logging.INFO,
                     handlers=[logging.StreamHandler()])
 logger = logging.getLogger()
 
-env = Environment(loader=FileSystemLoader('app/templates'))
+MODE = os.environ.get('MODE')
+if MODE == "dev":
+    env = Environment(loader=FileSystemLoader('templates'))
+else:
+    env = Environment(loader=FileSystemLoader('app/templates'))
 
-
-# local test
-# env = Environment(loader=FileSystemLoader('templates'))
 
 ############################################################
 # Domain Logic
@@ -219,7 +220,8 @@ class CpuHandler(RequestHandler):
         arg = {
             "inference_name": deploymentID,
             "request_cpu": request_cpu,
-            "host": host_endpoint
+            "host": host_endpoint,
+            "xProto": xProto
         }
 
         template = env.get_template('embed.html')
@@ -244,7 +246,8 @@ class MemoryHandler(RequestHandler):
         arg = {
             "inference_name": deploymentID,
             "request_memory": request_memory,
-            "host": host_endpoint
+            "host": host_endpoint,
+            "xProto": xProto
         }
 
         template = env.get_template('embed.html')
